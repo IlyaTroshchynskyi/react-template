@@ -217,6 +217,58 @@ npm run format:check   # Check if files are formatted correctly
 - If Prettier doesn't work: Check the Prettier package path is correct
 - View errors: `View` → `Tool Windows` → `Problems`
 
+### Pre-commit Hooks (Husky + lint-staged)
+
+This project uses **Husky** for Git hooks and **lint-staged** to run linters on staged files before each commit.
+
+#### Setup
+
+1. **Initialize Husky** (run once after cloning):
+
+```bash
+npm run prepare
+```
+
+This creates the `.husky/` directory.
+
+2. **Add pre-commit hook** (Husky v9+):
+
+```bash
+echo "npx lint-staged" > .husky/pre-commit
+```
+
+That's it! No need to make it executable in Husky v9+.
+
+#### How It Works
+
+When you run `git commit`, the pre-commit hook automatically:
+
+1. Runs **Prettier** to format staged files
+2. Runs **ESLint** with `--fix` on staged files
+3. If there are errors that can't be auto-fixed, the commit is **blocked**
+```
+
+#### Testing the Hook
+
+```bash
+# Make a change to a .tsx file
+echo "const x=1" >> src/App.tsx
+
+# Stage and commit
+git add src/App.tsx
+git commit -m "test commit"
+
+# The hook will format the code before committing
+```
+
+#### Bypassing Hooks (Emergency Only)
+
+```bash
+git commit -m "message" --no-verify
+```
+
+⚠️ Use sparingly — this skips all quality checks!
+
 ## 🔧 Configuration (Original)
 
 ## 📦 Key Features
@@ -293,14 +345,6 @@ The project uses **JSON Server** for a mock REST API. Replace with your real bac
 ✅ **Separation of concerns** - API / State / UI layers
 ✅ **Named exports** - Better tree-shaking
 ✅ **Arrow functions** - Consistent code style
-
-## 📚 Learn More
-
-- [React Documentation](https://react.dev)
-- [Redux Toolkit](https://redux-toolkit.js.org)
-- [TanStack Query](https://tanstack.com/query)
-- [Material-UI](https://mui.com)
-- [Formik](https://formik.org)
 
 ## 🤝 Contributing
 
