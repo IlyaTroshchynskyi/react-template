@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { fetchTodos, fetchTodoById, createTodo, patchTodo, deleteTodo } from './todosApi'
 import type { UpdateTodoDto } from '../types'
 import type { TodoFormValues } from '../validation/todoSchema'
@@ -18,12 +18,23 @@ export const useTodosQuery = () =>
     queryFn: fetchTodos,
   })
 
-export const useTodoQuery = (id: string) =>
-  useQuery({
+export const useTodosSuspenseQuery = () => {
+  return useSuspenseQuery({
+    queryKey: todoKeys.lists(),
+    queryFn: async () => {
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      return fetchTodos()
+    },
+  })
+}
+
+export const useTodoQuery = (id: string) => {
+  return useQuery({
     queryKey: todoKeys.detail(id),
     queryFn: () => fetchTodoById(id),
     enabled: !!id,
   })
+}
 
 export const useCreateTodoMutation = () => {
   const queryClient = useQueryClient()

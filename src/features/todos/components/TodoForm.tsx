@@ -75,7 +75,6 @@ export const TodoForm = ({ onSubmit, initialData, onCancel, isLoading }: TodoFor
             onBlur={formik.handleBlur}
             error={formik.touched.title && Boolean(formik.errors.title)}
             helperText={formik.touched.title && formik.errors.title}
-            autoFocus
           />
 
           <TextField

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderWithProviders, screen, waitFor } from '../../../../test/test-utils'
+import { renderWithProviders, screen, waitFor } from '../../../../test'
 import { TodoForm } from '../TodoForm'
-import { todoFactory } from '../../../../test/factories'
+import { todoFactory } from '../../../../test'
 
 describe('TodoForm', () => {
   const defaultProps = {

@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
-import { AppBar, Toolbar, Typography, IconButton, Box, Container, Tooltip } from '@mui/material'
+import { AppBar, Toolbar, Typography, IconButton, Box, Container, Tooltip, Button } from '@mui/material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { toggleTheme } from '../../features/ui/slice/uiSlice'
 import { selectTheme } from '../../features/ui/slice/selectors'
+import { FE_ROUTES } from '../constants'
 
 interface LayoutProps {
   children: ReactNode
@@ -14,6 +16,8 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const dispatch = useAppDispatch()
   const theme = useAppSelector(selectTheme)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -42,6 +46,23 @@ export const Layout = ({ children }: LayoutProps) => {
           >
             Todo App
           </Typography>
+
+          <Box sx={{ display: 'flex', gap: 1, mr: 2 }}>
+            <Button
+              variant={location.pathname === FE_ROUTES.HOME ? 'contained' : 'text'}
+              size='small'
+              onClick={() => navigate(FE_ROUTES.HOME)}
+            >
+              Todos
+            </Button>
+            <Button
+              variant={location.pathname === FE_ROUTES.SUSPENSE_EXAMPLE ? 'contained' : 'text'}
+              size='small'
+              onClick={() => navigate(FE_ROUTES.SUSPENSE_EXAMPLE)}
+            >
+              Suspense Example
+            </Button>
+          </Box>
 
           <Tooltip title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
             <IconButton
