@@ -1,6 +1,6 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker'
-import type { Todo } from '../../features/todos/types'
+import type { Todo } from '@features/todos/types'
 
 export const todoFactory = Factory.define<Todo>(({ sequence }) => {
   const createdAt = faker.date.past({ years: 1 })

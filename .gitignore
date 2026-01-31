@@ -26,3 +26,5 @@ db.json
 .husky
 .env
 coverage
+.vscode
+.tanstack

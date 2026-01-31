@@ -7,9 +7,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter, type MemoryRouterProps } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { uiSlice } from '../features/ui/slice/uiSlice'
-import { todosSlice } from '../features/todos/slice/todosSlice'
-import { darkTheme, lightTheme } from '../app/theme'
+import { uiSlice } from '@features/ui/slice/uiSlice'
+import { todosSlice } from '@features/todos/slice/todosSlice'
+import { darkTheme, lightTheme } from '@app/theme'
 
 export * from '@testing-library/react'
 export { userEvent }

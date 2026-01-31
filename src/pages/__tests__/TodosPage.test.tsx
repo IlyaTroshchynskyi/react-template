@@ -1,8 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderWithProviders, screen, waitFor } from '../../test'
-import { TodosPage } from '../TodosPage'
-import { resetTodos } from '../../test'
-import { todoFactory } from '../../test'
+import { renderWithProviders, screen, todoFactory, resetTodos, waitFor } from '@test'
+import { TodosPage } from '@pages/TodosPage'
 
 describe('TodosPage', () => {
   beforeEach(() => {

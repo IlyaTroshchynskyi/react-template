@@ -3,8 +3,8 @@ import { Box, Typography, Card, CardContent, Stack, Chip, Alert, Paper } from '@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useTodosSuspenseQuery } from '../features/todos/api/queries'
-import { LoadingFallback, ErrorFallback } from '../shared/components'
+import { useTodosSuspenseQuery } from '@features/todos/api/queries'
+import { LoadingFallback, ErrorFallback } from '@shared/components'
 
 const SuspendedTodoList = () => {
   const { data: todos } = useTodosSuspenseQuery()
@@ -99,3 +99,5 @@ export const SuspenseExamplePage = () => {
     </Box>
   )
 }
+
+export default SuspenseExamplePage
