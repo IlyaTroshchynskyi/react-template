@@ -22,7 +22,7 @@ export const useTodosSuspenseQuery = () => {
   return useSuspenseQuery({
     queryKey: todoKeys.lists(),
     queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 2000)) // Todo just for demo purposes
       return fetchTodos()
     },
   })

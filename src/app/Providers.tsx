@@ -8,7 +8,7 @@ import { store } from './store'
 import { queryClient } from './queryClient'
 import { darkTheme, lightTheme } from './theme'
 import { useAppSelector } from './hooks'
-import { selectTheme } from '../features/ui/slice/selectors'
+import { selectTheme } from '@features/ui/slice/selectors'
 
 interface ProvidersProps {
   children: ReactNode

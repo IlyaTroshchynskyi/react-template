@@ -1,9 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useUpdateTodoMutation } from '../queries'
-import { createQueryWrapper } from '../../../../test'
-import { resetTodos } from '../../../../test'
-import { todoFactory } from '../../../../test'
+import { createQueryWrapper, resetTodos, todoFactory } from '@test'
 
 // Was left as example maybe for complex queries. in other cases it is useless
 describe('todo queries', () => {

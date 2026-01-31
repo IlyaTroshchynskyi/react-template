@@ -4,10 +4,10 @@ import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { toggleTheme } from '../../features/ui/slice/uiSlice'
-import { selectTheme } from '../../features/ui/slice/selectors'
-import { FE_ROUTES } from '../constants'
+import { useAppDispatch, useAppSelector } from '@app/hooks'
+import { toggleTheme } from '@features/ui/slice/uiSlice'
+import { selectTheme } from '@features/ui/slice/selectors'
+import { FE_ROUTES } from '@shared/constants'
 
 interface LayoutProps {
   children: ReactNode
@@ -60,7 +60,14 @@ export const Layout = ({ children }: LayoutProps) => {
               size='small'
               onClick={() => navigate(FE_ROUTES.SUSPENSE_EXAMPLE)}
             >
-              Suspense Example
+              Suspense
+            </Button>
+            <Button
+              variant={location.pathname === FE_ROUTES.LAZY_EXAMPLE ? 'contained' : 'text'}
+              size='small'
+              onClick={() => navigate(FE_ROUTES.LAZY_EXAMPLE)}
+            >
+              Lazy Loading
             </Button>
           </Box>
 

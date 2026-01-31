@@ -1,14 +1,26 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Layout } from './shared/components/Layout'
-import { TodosPage } from './pages/TodosPage'
-import { SuspenseExamplePage } from './pages/SuspenseExamplePage'
-import { FE_ROUTES } from './shared/constants'
+import { Layout } from '@shared/components/Layout'
+import { LoadingFallback } from '@shared/components'
+import { FE_ROUTES } from '@shared/constants'
+import { TodosPage } from '@pages/TodosPage'
+import { SuspenseExamplePage } from '@pages/SuspenseExamplePage'
+
+const LazyExamplePage = lazy(() => import('@pages/LazyExamplePage'))
 
 const App = () => (
   <Layout>
     <Routes>
       <Route path={FE_ROUTES.HOME} element={<TodosPage />} />
       <Route path={FE_ROUTES.SUSPENSE_EXAMPLE} element={<SuspenseExamplePage />} />
+      <Route
+        path={FE_ROUTES.LAZY_EXAMPLE}
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <LazyExamplePage />
+          </Suspense>
+        }
+      />
       <Route path='*' element={<Navigate to={FE_ROUTES.HOME} replace />} />
     </Routes>
   </Layout>

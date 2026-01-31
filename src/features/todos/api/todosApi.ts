@@ -1,5 +1,5 @@
-import { axiosInstance } from '../../../shared/api'
-import { API_ENDPOINTS } from '../../../shared/constants'
+import { axiosInstance } from '@shared/api'
+import { API_ENDPOINTS } from '@shared/constants'
 import type { Todo } from '../types'
 import type { TodoFormValues } from '../validation/todoSchema'
 

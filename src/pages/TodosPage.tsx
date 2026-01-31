@@ -1,18 +1,18 @@
 import { useState, useCallback, useMemo } from 'react'
 import { Stack, Dialog, DialogContent, Button, Box, Snackbar, Alert } from '@mui/material'
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
-import { TodoForm, TodoFilters, TodoList } from '../features/todos/components'
-import { useTodoFilters } from '../features/todos/hooks/useTodoFilters'
+import { TodoForm, TodoFilters, TodoList } from '@features/todos/components'
+import { useTodoFilters } from '@features/todos/hooks/useTodoFilters'
 import {
   useTodosQuery,
   useCreateTodoMutation,
   useUpdateTodoMutation,
   useDeleteTodoMutation,
   useToggleTodoMutation,
-} from '../features/todos/api/queries'
-import { filterAndSortTodos, calculateTodoStats } from '../features/todos/utils/todoUtils'
-import type { Todo } from '../features/todos/types'
-import type { TodoFormValues } from '../features/todos/validation/todoSchema'
+} from '@features/todos/api/queries'
+import { filterAndSortTodos, calculateTodoStats } from '@features/todos/utils/todoUtils'
+import type { Todo } from '@features/todos/types'
+import type { TodoFormValues } from '@features/todos/validation/todoSchema'
 
 type NotificationType = 'success' | 'error' | 'info'
 
@@ -208,3 +208,5 @@ export const TodosPage = () => {
     </Stack>
   )
 }
+
+export default TodosPage

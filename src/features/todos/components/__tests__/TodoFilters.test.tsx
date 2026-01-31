@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderWithProviders, screen } from '../../../../test'
+import { renderWithProviders, screen } from '@test'
 import { TodoFilters } from '../TodoFilters'
 
 describe('TodoFilters', () => {

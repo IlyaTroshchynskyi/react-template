@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw'
-import type { Todo } from '../../features/todos/types'
-import type { TodoFormValues } from '../../features/todos/validation/todoSchema'
-import { todoFactory } from '../factories'
+import type { Todo } from '@features/todos/types'
+import type { TodoFormValues } from '@features/todos/validation/todoSchema'
+import { todoFactory } from '@test/factories'
 
 // In-memory store for todos during tests
 let todos: Todo[] = []
