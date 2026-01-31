@@ -5,6 +5,7 @@ import { LoadingFallback } from '@shared/components'
 import { FE_ROUTES } from '@shared/constants'
 import { TodosPage } from '@pages/TodosPage'
 import { SuspenseExamplePage } from '@pages/SuspenseExamplePage'
+import { NotFoundPage } from '@pages/NotFoundPage'
 
 const LazyExamplePage = lazy(() => import('@pages/LazyExamplePage'))
 
@@ -21,7 +22,8 @@ const App = () => (
           </Suspense>
         }
       />
-      <Route path='*' element={<Navigate to={FE_ROUTES.HOME} replace />} />
+      <Route path={FE_ROUTES.NOT_FOUND} element={<NotFoundPage />} />
+      <Route path='*' element={<Navigate to={FE_ROUTES.NOT_FOUND} replace />} />
     </Routes>
   </Layout>
 )

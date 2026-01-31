@@ -3,4 +3,5 @@ export const FE_ROUTES = {
   TODOS: '/',
   SUSPENSE_EXAMPLE: '/suspense-example',
   LAZY_EXAMPLE: '/lazy-example',
+  NOT_FOUND: '/not-found',
 } as const
