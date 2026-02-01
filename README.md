@@ -142,17 +142,6 @@ VITE_API_BASE_URL=http://localhost:3001
 This project uses ESLint for code linting and Prettier for code formatting.
 
 **Prettier Configuration** (`.prettierrc`):
-```json
-{
-  "semi": false,              // No semicolons
-  "singleQuote": true,        // Use single quotes
-  "tabWidth": 2,              // 2 spaces for indentation
-  "trailingComma": "es5",     // Trailing commas where valid in ES5
-  "printWidth": 100,          // Max line length 100 characters
-  "arrowParens": "avoid",     // Omit parens when possible (x => x)
-  "endOfLine": "lf"           // Unix line endings
-}
-```
 
 **Available commands:**
 
