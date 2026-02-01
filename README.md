@@ -109,19 +109,31 @@ npm run preview   # Preview production build
 npm run lint      # Run ESLint
 ```
 
+### 🐳 Docker
+
+```bash
+# Build the image
+docker build -t react-template .
+
+# Run the container
+docker run -p 3000:80 react-template
+```
+
+The app will be available at http://localhost:3000
+
 ## 🔧 Configuration
 
 ### Environment Variables
 
-Create `.env` file in the root:
+Copy `.env.example` to `.env` in the root:
+
+```bash
+cp .env.example .env
+```
 
 ```env
 VITE_API_BASE_URL=http://localhost:3001
 ```
-
-Environment-specific files:
-- `.env.development` - Development settings
-- `.env.production` - Production settings
 
 ## 🛠️ Code Quality Tools
 
