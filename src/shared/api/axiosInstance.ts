@@ -2,7 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { API_BASE_URL } from '../constants'
 import { tokenService } from './tokenService'
 
-// Create axios instance
+// Todo check in real app
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
