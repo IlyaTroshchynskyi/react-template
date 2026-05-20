@@ -347,6 +347,14 @@ The project uses **JSON Server** for a mock REST API. Replace with your real bac
 ✅ **Named exports** - Better tree-shaking
 ✅ **Arrow functions** - Consistent code style
 
+## 🤖 Claude Code
+
+The Claude Code configuration is committed to this repository under `.claude/` for reference:
+
+- **`CLAUDE.md`** — project context loaded automatically by Claude Code (commands, architecture, testing patterns)
+- **`.claude/skills/`** — reusable skill prompts: `route-builder`, `react-query-patterns`, `security-pr-checklist`, `vercel-composition-patterns`, `vercel-react-best-practices`
+- **`.claude/agents/`** — specialized sub-agents: `senior-dev` (feature implementation) and `senior-qa` (bug hunting + testing)
+
 ## 🤝 Contributing
 
 This is a template project. Feel free to use it as a starting point for your applications!
