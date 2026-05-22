@@ -55,6 +55,12 @@ src/
 │
 ├── App.tsx                   # Root component
 └── main.tsx                  # Entry point
+
+e2e/                          # Playwright end-to-end tests (see § E2E Tests)
+├── fixtures/                 # Custom test + expect (mockRoutes, todosPage)
+├── mocks/                    # page.route() handlers + fixture data
+├── pages/                    # Page Object Model
+└── tests/                    # *.spec.ts files
 ```
 
 ## 🛠️ Tech Stack
@@ -71,6 +77,8 @@ src/
 | **Axios** | HTTP client with interceptors | Latest |
 | **JSON Server** | Mock REST API | Latest |
 | **Vite** | Build tool | 7.x |
+| **Vitest** | Unit & component tests | 4.x |
+| **Playwright** | End-to-end tests | 1.60+ |
 
 ## 🚀 Getting Started
 
@@ -101,12 +109,22 @@ This will start:
 ### Available Scripts
 
 ```bash
-npm run dev       # Run both client and JSON Server
-npm run client    # Run Vite dev server only
-npm run server    # Run JSON Server only
-npm run build     # Build for production
-npm run preview   # Preview production build
-npm run lint      # Run ESLint
+npm run dev              # Run both client and JSON Server
+npm run client           # Run Vite dev server only
+npm run server           # Run JSON Server only
+npm run build            # Build for production
+npm run preview          # Preview production build
+npm run lint             # Run ESLint
+npm run lint:fix         # ESLint with auto-fix
+npm run format           # Prettier write
+npm run format:check     # Prettier check
+npm run test             # Vitest (watch mode)
+npm run test:run         # Vitest single run
+npm run test:coverage    # Vitest with coverage (80% threshold)
+npm run test:e2e         # Playwright (headless)
+npm run test:e2e:ui      # Playwright UI mode
+npm run test:e2e:debug   # Playwright debugger
+npm run test:e2e:headed  # Playwright headed (visible browser)
 ```
 
 ### 🐳 Docker
@@ -269,6 +287,200 @@ git commit -m "message" --no-verify
 ```
 
 ⚠️ Use sparingly — this skips all quality checks!
+
+## 🎭 End-to-End Tests (Playwright)
+
+End-to-end tests live in `e2e/` and run real browser sessions against the Vite dev server. The setup is isolated from the unit-test stack (Vitest) and uses a separate TypeScript config so Playwright types stay out of the production build.
+
+### How it works
+
+API calls are intercepted at the browser network level using `page.route()`. **No mock backend (json-server) is required** to run the tests — fixture data is served entirely from Playwright. The same setup transparently supports a real backend by setting `USE_REAL_BACKEND=true`, which bypasses the mocks and forwards requests.
+
+**Why route mocking over json-server?** `page.route()` handles file uploads, long polling, SSE, and WebSockets (via `page.routeWebSocket()`). It also keeps fixture data co-located with the tests and removes the need for a running mock server.
+
+### Folder structure
+
+```
+e2e/
+├── fixtures/
+│   └── index.ts          # Custom test + expect, exports mockRoutes + todosPage fixtures
+├── mocks/
+│   ├── handlers.ts       # setupMockRoutes(page) — registers page.route() handlers
+│   └── data/
+│       └── todos.ts      # Static fixture data typed against the app's Todo interface
+├── pages/
+│   ├── BasePage.ts       # Shared goto()
+│   └── TodosPage.ts      # POM for the Todos route (/)
+└── tests/
+    └── smoke.spec.ts     # Smoke test: app loads, todos page is visible
+
+playwright.config.ts       # Chromium project, dotenv loading, Vite webServer
+tsconfig.e2e.json          # Isolated TS config — Playwright types do NOT leak into Vite build
+.env.e2e                   # Committed defaults (USE_REAL_BACKEND=false)
+.env.e2e.local             # Local overrides (gitignored via *.local)
+.github/workflows/playwright.yml
+```
+
+### Type-safety guarantee
+
+Mock data imports the production `Todo` type directly from `@features/todos/types`. If `Todo` gains or loses a field, `mockTodos` fails to compile — schema drift is impossible.
+
+### Running tests
+
+```bash
+# Run all E2E tests headless (default)
+npm run test:e2e
+
+# Run a single spec file
+npx playwright test e2e/tests/smoke.spec.ts
+
+# Filter by test title
+npx playwright test -g "app loads"
+
+# Interactive UI mode — best for development
+npm run test:e2e:ui
+
+# Headed mode (watch the browser)
+npm run test:e2e:headed
+
+# Step-through debugger
+npm run test:e2e:debug
+```
+
+Playwright auto-starts Vite via the `webServer` config option — you do **not** need to run `npm run dev` first. If Vite is already running on `:5173`, Playwright reuses it (`reuseExistingServer: !CI`).
+
+### Reports & artifacts
+
+| Artifact | When generated | Location |
+|---|---|---|
+| HTML report | Every run | `playwright-report/` (auto-opens on failure locally) |
+| Trace | On first retry | `test-results/<test>/trace.zip` |
+| Screenshot | On failure | `test-results/<test>/test-failed-N.png` |
+| Video | On failure | `test-results/<test>/video.webm` |
+
+View the last report:
+
+```bash
+npx playwright show-report
+```
+
+Open a trace file:
+
+```bash
+npx playwright show-trace test-results/<test>/trace.zip
+```
+
+### Environment variables
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `USE_REAL_BACKEND` | `false` | When `'true'`, mocks are skipped and requests hit the real backend |
+| `API_URL` | `http://localhost:3001` | Base URL of the real/mock backend (used by mock handlers and the app) |
+| `CI` | unset | When set, activates strict mode: `forbidOnly`, 2 retries, 50% workers, github reporter |
+
+`playwright.config.ts` loads `.env.e2e.local` first, then `.env.e2e` — local values win (dotenv does not override existing keys).
+
+### Running against a real backend
+
+```bash
+# 1. Start your backend manually (json-server, FastAPI, etc.) on port 3001
+npm run server   # or: uvicorn app.main:app --port 3001
+
+# 2. Create .env.e2e.local with:
+#    USE_REAL_BACKEND=true
+#    API_URL=http://localhost:3001
+
+# 3. Run the tests — mocks are bypassed
+npm run test:e2e
+```
+
+> Playwright's `webServer` only starts Vite. When `USE_REAL_BACKEND=true`, **you are responsible for starting the backend** before running tests.
+
+### Writing a new test
+
+Tests use a **Page Object Model** with **custom fixtures**. The fixture chain automatically applies mock routes before any page object is instantiated — tests never call `setupMockRoutes` directly.
+
+**1. Add a page object** (`e2e/pages/MyPage.ts`):
+
+```typescript
+import { expect, type Locator, type Page } from '@playwright/test'
+import { BasePage } from './BasePage'
+
+export class MyPage extends BasePage {
+  readonly heading: Locator
+  readonly submitButton: Locator
+
+  constructor(page: Page) {
+    super(page)
+    this.heading = page.getByRole('heading', { level: 1, name: 'My Page' })
+    this.submitButton = page.getByRole('button', { name: 'Submit' })
+  }
+
+  async goto() {
+    await super.goto('/my-route')
+    await expect(this.heading).toBeVisible()
+  }
+}
+```
+
+**2. Wire it into the fixtures** (`e2e/fixtures/index.ts`):
+
+```typescript
+interface Fixtures {
+  mockRoutes: void
+  todosPage: TodosPage
+  myPage: MyPage  // ← add
+}
+
+export const test = base.extend<Fixtures>({
+  // ...existing fixtures
+  myPage: async ({ page, mockRoutes: _mockRoutes }, use) => {
+    await use(new MyPage(page))
+  },
+})
+```
+
+The unused `mockRoutes` dependency ensures mocks are set up before the page object is created.
+
+**3. Write the spec** (`e2e/tests/my-feature.spec.ts`):
+
+```typescript
+import { test, expect } from '../fixtures'
+
+test('submits the form', async ({ myPage }) => {
+  await myPage.goto()
+  await myPage.submitButton.click()
+  await expect(myPage.heading).toContainText('Success')
+})
+```
+
+### Adding mock routes for new endpoints
+
+Edit `e2e/mocks/handlers.ts` and register additional `page.route()` calls inside `setupMockRoutes`. Match by absolute URL (`${API_BASE}/endpoint`) or regex for parameterized paths. Always call `route.fallback()` for unhandled methods so they pass through (useful in real-backend mode).
+
+### Locator conventions
+
+- Prefer **role-based locators** (`getByRole`, `getByLabel`, `getByText`) over CSS selectors — they reflect the accessibility tree and survive markup changes.
+- Avoid `page.waitForLoadState('networkidle')` — it is unreliable with React Query background refetches, polling, and SSE. Wait on a concrete locator instead (`await expect(locator).toBeVisible()`).
+- Define locators as **readonly class fields** in the page object constructor so they are created once.
+
+### CI
+
+GitHub Actions runs the suite on every push and PR to `main`/`master` via `.github/workflows/playwright.yml`:
+
+- 30-minute timeout
+- Installs Chromium only (`npx playwright install chromium --with-deps`)
+- Uploads `playwright-report/` as an artifact (14-day retention) on every run, including failures
+
+### Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| `ReferenceError: __dirname is not defined` | ESM project missing `__dirname` shim in `playwright.config.ts` | Already handled — uses `fileURLToPath(import.meta.url)` |
+| Tests hit the real backend unexpectedly | `USE_REAL_BACKEND` set to truthy string in env | Verify `.env.e2e.local` — only `'true'` skips mocks (the string `'false'` is also truthy in JS) |
+| Vite port `:5173` busy | Another dev server running | Either stop it, or rely on `reuseExistingServer: !CI` (already enabled locally) |
+| ESLint errors about `use` being a React hook in fixtures | `react-hooks/rules-of-hooks` rule false-positives on Playwright's `use` callback | Already handled — disabled for `e2e/**` in `eslint.config.js` |
+| Mock fixture types out of sync with app | Mocks no longer match the `Todo` type | TypeScript will fail — update `e2e/mocks/data/todos.ts` |
 
 ## 🔧 Configuration (Original)
 

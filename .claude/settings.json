@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport json, sys\ndata = json.load(sys.stdin)\nagent = data.get('agent_name', '')\nif 'senior-dev' in agent:\n    msg = ('MANDATORY: You are the senior-dev agent. Before writing any code, you MUST use the Skill tool to load:\\n'\n           '1. react-memoization (ALWAYS)\\n'\n           '2. component-decomposition (ALWAYS)\\n'\n           'Then load additional skills based on task:\\n'\n           '- New route/page? Load route-builder\\n'\n           '- Data fetching/mutations? Load react-query-patterns\\n'\n           '- Tabs/filters/pagination? Load react-state-patterns\\n'\n           '- Component API design? Load vercel-composition-patterns\\n'\n           '- Performance/bundle? Load vercel-react-best-practices\\n'\n           '- Security review? Load security-pr-checklist\\n'\n           'Do NOT skip this step.')\n    print(json.dumps({'hookSpecificOutput': {'hookEventName': 'SubagentStart', 'additionalContext': msg}}))\n\"",
+            "statusMessage": "Loading senior-dev skill reminders..."
+          }
+        ]
+      }
+    ]
+  }
+}
