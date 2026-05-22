@@ -27,3 +27,9 @@ db.json
 coverage
 .vscode
 .tanstack
+.superpowers
+
+# Playwright
+/playwright-report/
+/test-results/
+/playwright/.cache/

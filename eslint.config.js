@@ -45,4 +45,12 @@ export default defineConfig([
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
+  {
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+    rules: {
+      // Playwright fixtures pass a `use` callback that ESLint mistakes for a React hook.
+      'react-hooks/rules-of-hooks': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+    },
+  },
 ])

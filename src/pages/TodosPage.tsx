@@ -123,14 +123,14 @@ export const TodosPage = () => {
   )
 
   const handleClearCompleted = useCallback(async () => {
-    const completedTodos = todos.filter(t => t.completed)
+    const completedTodos = (todosQuery.data ?? []).filter(t => t.completed)
     try {
       await Promise.all(completedTodos.map(t => deleteTodo(t.id)))
       showNotification('Cleared completed todos', 'info')
     } catch {
       showNotification('Failed to clear completed todos', 'error')
     }
-  }, [todos, deleteTodo, showNotification])
+  }, [todosQuery.data, deleteTodo, showNotification])
 
   return (
     <Stack spacing={3}>
